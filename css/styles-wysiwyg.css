@@ -1,0 +1,66 @@
+* {
+	font-size: 13px;
+	font-family: Arial, sans-serif;
+}
+
+h1 {
+	font: bold 15px Arial, sans-serif;
+}
+
+textarea, iframe {
+	width: 100%;
+	height: 140px;
+	outline: none;
+	resize: none;
+	border: 1px solid #c0c0c0;
+}
+
+.wysiwyg-toolbar {
+	float: left;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	margin-bottom: 5px;
+	list-style: none;
+}
+
+.wysiwyg-toolbar li {
+	position: relative;
+	padding: 5px;
+	border: 1px solid #e4e4e4;
+	float: left;
+	color: #707070;
+	margin-bottom: 3px;
+}
+
+.wysiwyg-toolbar li:hover {
+	border: 1px solid #c0c0c0;
+	color: #000000;
+	cursor: pointer;
+	box-shadow: 1px 0px 1px #e5e5e5;
+}
+
+.wysiwyg-toolbar li:active {	
+	box-shadow: inset 0px 1px 2px #e5e5e5;
+}
+
+.wysiwyg-toolbar li.left {
+	margin-left: 4px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	border-right: 0;
+}
+
+.wysiwyg-toolbar li.middle {
+	border-right: 0;
+}
+
+.wysiwyg-toolbar li.right {
+	margin-right: 4px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.wysiwyg-toolbar li + li.right {
+	border-right: 1px solid #e4e4e4;
+}
