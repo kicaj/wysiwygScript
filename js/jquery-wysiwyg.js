@@ -46,6 +46,9 @@ $(document).ready(function() {
 
 		// Create toolbar
 		$('.wysiwyg-editor').before('<h1>PUBLISHER</h1><ul class="wysiwyg-toolbar"></ul>');
+		
+		// Create array of tools
+		var toolbar = ['bold', 'italic', 'underline', 'strikethrough', 'insertorderedlist', 'insertunorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'subscript', 'superscript'];
 
 		// Create toolbar buttons
 		$('<li id="wysiwyg-bold" class="left" unselectable="on">bold</li>').appendTo('.wysiwyg-toolbar');
@@ -76,7 +79,7 @@ $(document).ready(function() {
 		setInterval(function() {
 			var content = $('.wysiwyg-editor').contents().find('body').html();
 			
-			// Replace html tags from uppercase to lowercase
+			// Replace html tags from uppercase to lowerc;ase
 			content = content.replace(/<\/?([A-Z])+.*?>/g, function(tag) {
 				return tag.toLowerCase();
 			});
@@ -91,13 +94,30 @@ $(document).ready(function() {
 			content = content.replace(/(<(\/)*strong>)/ig, '<$2b>');
 			content = content.replace(/(<(\/)*em>)/ig, '<$2i>');
 			
-			// Replace alignments
+			// Replace and normalize alignments
 			content = content.replace(/(align="(.+)")/ig, 'style="text-align: $2;"');
 
 			$('#show').html(content);
 			$('textarea').val(content);
 		}, 250);
+		
+		// Show activate toolbars
+		$(iframe.contentWindow).on('click', function() {
+			for(var i = 0; i < toolbar.length; i++) {
+				if(iframe.contentWindow.document.queryCommandState(toolbar[i]) == true) {
+					$('#wysiwyg-'+ toolbar[i]).css({
+						'background': '#f2f2f2',
+						'color': '#000000'
+					});
+				} else {
+					$('#wysiwyg-'+ toolbar[i]).css({
+						'background': '#ffffff',
+						'color': '#707070'
+					});
+				}
+			}
+		});
 	});
 });
 
-// Tested on: Chrome 27; Firefox ; Internet Explorer; Opera; Opera Next; Safari;
+// Tested on: Chrome 27; Firefox 21; IE 10; Opera 12.15; Opera Next 15 and Safari 5.1.7.
