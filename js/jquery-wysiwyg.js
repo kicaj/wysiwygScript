@@ -79,7 +79,7 @@ $(document).ready(function() {
 		setInterval(function() {
 			var content = $('.wysiwyg-editor').contents().find('body').html();
 			
-			// Replace html tags from uppercase to lowerc;ase
+			// Replace html tags from uppercase to lowercase
 			content = content.replace(/<\/?([A-Z])+.*?>/g, function(tag) {
 				return tag.toLowerCase();
 			});
