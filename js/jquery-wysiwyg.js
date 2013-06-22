@@ -51,16 +51,16 @@ $(document).ready(function() {
 		var toolbar = ['bold', 'italic', 'underline', 'strikethrough', 'insertorderedlist', 'insertunorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'subscript', 'superscript', 'createlink', 'unlink'];
 
 		// Create toolbar buttons
-		$('<li id="wysiwyg-bold" class="left" unselectable="on">bold</li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-italic" class="middle" unselectable="on">italic</li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-underline" class="middle" unselectable="on">underline</i></li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-strikethrough" class="right" unselectable="on">strike</i></li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-insertorderedlist" class="left" unselectable="on">ordered list</i></li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-insertunorderedlist" class="right" unselectable="on">unordered list</li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-justifyleft" class="left" unselectable="on">text-left</li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-justifycenter" class="middle" unselectable="on">text-center</li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-justifyright" class="middle" unselectable="on">text-right</li>').appendTo('.wysiwyg-toolbar');
-		$('<li id="wysiwyg-justifyfull" class="right" unselectable="on">text-justify</li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-bold" class="left" unselectable="on">setBold</li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-italic" class="middle" unselectable="on">setItalic</li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-underline" class="middle" unselectable="on">underLine</i></li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-strikethrough" class="right" unselectable="on">strikeThrough</i></li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-insertorderedlist" class="left" unselectable="on">orderedList</i></li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-insertunorderedlist" class="right" unselectable="on">unorderedList</li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-justifyleft" class="left" unselectable="on">textLeft</li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-justifycenter" class="middle" unselectable="on">textCenter</li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-justifyright" class="middle" unselectable="on">textRight</li>').appendTo('.wysiwyg-toolbar');
+		$('<li id="wysiwyg-justifyfull" class="right" unselectable="on">textJustify</li>').appendTo('.wysiwyg-toolbar');
 		$('<li id="wysiwyg-subscript" class="left" unselectable="on">subScript</li>').appendTo('.wysiwyg-toolbar');
 		$('<li id="wysiwyg-superscript" class="right" unselectable="on">superScript</li>').appendTo('.wysiwyg-toolbar');
 		$('<li id="wysiwyg-createlink" class="left" unselectable="on">createLink</li>').appendTo('.wysiwyg-toolbar');
@@ -114,7 +114,7 @@ $(document).ready(function() {
 		
 		// Show activate toolbars
 		$(iframe.contentWindow).on('click', function() {
-			for(var i = 0; i < toolbar.length; i++) {				
+			for(var i = 0; i < toolbar.length; i++) {
 				if(iframe.contentWindow.document.queryCommandState(toolbar[i]) == true) {
 					$('#wysiwyg-'+ toolbar[i]).css({
 						'background': '#f2f2f2',
