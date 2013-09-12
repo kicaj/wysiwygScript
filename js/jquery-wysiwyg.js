@@ -3,19 +3,19 @@ $(document).ready(function() {
 		// Handle textarea
 		var editor = $(this);
 		var command = null;
-
+		
 		// Create iframe
 		iframe = document.createElement('iframe');
-		iframe.className = 'wysiwyg-editor'
-
+		iframe.className = 'wysiwyg-editor';
+		
 		// Display iframe and hide editor
 		editor.after(iframe);
 		editor.attr('disabled', 'disabled');
 		//editor.hide();
-
+		
 		// Create template
 		var template = '<html><head><link rel="stylesheet" type="text/css" href="css/styles-wysiwyg.css" /></head><body class="wysiwyg-content">' + editor.val() + '</body></html>';
-
+		
 		try {
 			iframe.contentWindow.document.open();
 			iframe.contentWindow.document.write(template);
@@ -23,14 +23,14 @@ $(document).ready(function() {
 		} catch(error) {
 			console.log(error);
 		}
-
+		
 		if(document.contentEditable || document.designMode != null) {
 			iframe.contentWindow.document.designMode = 'on';
 		} else {
 			// Cannot switch WYSIWYG mode
 		}
-
-		// Set shorter tags (HTML above CSS for eg. Firefox)		
+		
+		// Set shorter tags (HTML above CSS for eg. Firefox)
 		try {
 			iframe.execCommand('styleWithCSS', false, false);
 		} catch(e) {
@@ -43,13 +43,13 @@ $(document).ready(function() {
 				}
 			}
 		}
-
+		
 		// Create toolbar
 		$('.wysiwyg-editor').before('<h1>PUBLISHER</h1><ul class="wysiwyg-toolbar"></ul>');
 		
 		// Create array of tools
 		var toolbar = ['bold', 'italic', 'underline', 'strikethrough', 'insertorderedlist', 'insertunorderedlist', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'subscript', 'superscript', 'createlink', 'unlink'];
-
+		
 		// Create toolbar buttons
 		$('<li id="wysiwyg-bold" class="left" unselectable="on">setBold</li>').appendTo('.wysiwyg-toolbar');
 		$('<li id="wysiwyg-italic" class="middle" unselectable="on">setItalic</li>').appendTo('.wysiwyg-toolbar');
@@ -66,7 +66,9 @@ $(document).ready(function() {
 		$('<li id="wysiwyg-createlink" class="left" unselectable="on">createLink</li>').appendTo('.wysiwyg-toolbar');
 		$('<li id="wysiwyg-unlink" class="right" unselectable="on">unLink</li>').appendTo('.wysiwyg-toolbar');
 		
-		// Toolbar button events
+		/**
+		 * Toolbar button events 
+		 */
 		$('.wysiwyg-toolbar li').on('click', function() {
 			// Get command name
 			commandName = $(this).attr('id').substring(8);
@@ -76,8 +78,15 @@ $(document).ready(function() {
 			
 			if(commandName == 'createlink') {
 				// @TODO: rewrite to modal, i18n, show inserted links
-				link = prompt('URL address', 'http://');
-				iframe.contentWindow.document.execCommand(commandName, false, link);
+				link = createLink();
+				
+				url = prompt('URL address', link);
+				
+				if(link != url) {
+					// Bug: IE and Opera change full link
+					// Bug: Firefox can't create link inside other
+					iframe.contentWindow.document.execCommand(commandName, false, url);
+				}
 			} else {
 				iframe.contentWindow.document.execCommand(commandName, false, null);
 			}
@@ -85,8 +94,10 @@ $(document).ready(function() {
 			// Set end command
 			iframe.contentWindow.focus();
 		});
-
-		// Live update form
+		
+		/**
+		 * Live normalize code 
+		 */
 		setInterval(function() {
 			var content = $('.wysiwyg-editor').contents().find('body').html();
 			
@@ -107,7 +118,7 @@ $(document).ready(function() {
 			
 			// Replace and normalize alignments
 			content = content.replace(/(align="(.+)")/ig, 'style="text-align: $2;"');
-
+			
 			$('#show').html(content);
 			$('textarea').val(content);
 		}, 250);
@@ -128,7 +139,67 @@ $(document).ready(function() {
 				}
 			}
 		});
+		
+		/**
+		 * Get selection text or HTML code
+		 * 
+		 * @param boolean code If true then show HTML code
+		 * @return string|null 
+		 */
+		function getSelected(code) {
+			var range = iframe.contentWindow.document.getSelection();
+			
+			if(range) {
+				if(range.getRangeAt) {
+					range = range.getRangeAt(0);
+				} else if(range.setStart) {
+					range.setStart(range.anchorNode, range.anchorOffset);
+					range.setEnd(range.focusNode, range.focusOffset);
+				}
+				
+				var html = null;
+				
+				if(range.cloneContents) {
+					var tmp = $('<div></div>');
+					tmp.append(range.cloneContents());
+					
+					if(code === true) {
+						return tmp.html();
+					} else {
+						return tmp.text();
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * Create, check and return URL
+		 * 
+		 * @return string|null 
+		 */
+		function createLink() {
+			var pattern = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
+			var search = getSelected(true).match(pattern);
+			
+			if(search !== null && search.length == 1) {
+				return search[0];
+			} else {
+				var check = iframe.contentWindow.document.getSelection().focusNode.parentNode.toString().match(pattern);
+ 
+				if(check !== null && check.length == 1) {
+					if(search instanceof Array) {
+						return null;
+					} else {						
+						return check;
+					}
+				} else {
+					return null;
+				}
+			}
+		}
 	});
 });
 
-// Works good on: Chrome 27; Firefox 21; IE 10; Opera 12.15; Opera Next 15 and Safari 5.1.7.
+// Works good on: Chrome 29; Firefox 23; IE 10; Opera 12.15; Opera Next 15 and Safari 5.1.7.
