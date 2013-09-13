@@ -77,7 +77,7 @@ $(document).ready(function() {
 			iframe.contentWindow.focus();
 			
 			if(commandName == 'createlink') {
-				link = createLink();
+				link = getLink();
 				
 				url = prompt('URL address', link);
 				
@@ -131,9 +131,14 @@ $(document).ready(function() {
 		}, 250);
 		
 		// Show activate toolbars
-		$(iframe.contentWindow).on('click', function() {
+		$(iframe.contentWindow).on('mouseup', function() {
 			for(var i = 0; i < toolbar.length; i++) {
-				if(iframe.contentWindow.document.queryCommandState(toolbar[i]) == true) {
+				if(getLink()) {
+					$('#wysiwyg-createlink').css({
+						'background': '#f2f2f2',
+						'color': '#000000'
+					});
+				} else if(iframe.contentWindow.document.queryCommandState(toolbar[i]) == true) {
 					$('#wysiwyg-'+ toolbar[i]).css({
 						'background': '#f2f2f2',
 						'color': '#000000'
@@ -182,11 +187,11 @@ $(document).ready(function() {
 		}
 		
 		/**
-		 * Create, check and return URL
+		 * Check and return link URL
 		 * 
 		 * @return string|null 
 		 */
-		function createLink() {
+		function getLink() {
 			var pattern = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
 			var search = getSelected(true).match(pattern);
 			
