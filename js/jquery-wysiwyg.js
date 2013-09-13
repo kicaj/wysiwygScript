@@ -77,15 +77,25 @@ $(document).ready(function() {
 			iframe.contentWindow.focus();
 			
 			if(commandName == 'createlink') {
-				// @TODO: rewrite to modal, i18n, show inserted links
 				link = createLink();
 				
 				url = prompt('URL address', link);
 				
 				if(link != url) {
+					before = $('.wysiwyg-editor').contents().find('body').html();
+					
 					// Bug: IE and Opera change full link
-					// Bug: Firefox can't create link inside other
 					iframe.contentWindow.document.execCommand(commandName, false, url);
+					
+					after = $('.wysiwyg-editor').contents().find('body').html();
+					
+					alert(before);
+					alert(after);
+					
+					if(before == after && url !== '' && getSelected(true) !== '') {
+						// Firefox: Insert link inside other link
+						iframe.contentWindow.document.execCommand('insertHTML', false, '<a href="'+ url +'">'+ getSelected(true) +'</a>');
+					}
 				}
 			} else {
 				iframe.contentWindow.document.execCommand(commandName, false, null);
@@ -190,12 +200,12 @@ $(document).ready(function() {
  
 				if(check !== null && check.length == 1) {
 					if(search instanceof Array) {
-						return null;
+						return 'A'+ null;
 					} else {						
 						return check;
 					}
 				} else {
-					return null;
+					return '';
 				}
 			}
 		}
