@@ -89,9 +89,6 @@ $(document).ready(function() {
 					
 					after = $('.wysiwyg-editor').contents().find('body').html();
 					
-					alert(before);
-					alert(after);
-					
 					if(before == after && url !== '' && getSelected(true) !== '') {
 						// Firefox: Insert link inside other link
 						iframe.contentWindow.document.execCommand('insertHTML', false, '<a href="'+ url +'">'+ getSelected(true) +'</a>');
